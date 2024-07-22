@@ -25,7 +25,7 @@
               </td>
             </tr>
             <tr v-if="transactions.length == 0">
-              <td colspan="4" class="text-center">No Transaction found</td>
+              <td colspan="5" class="text-center">No Transaction found</td>
             </tr>
           </tbody>
         </table>

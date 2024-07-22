@@ -22,8 +22,16 @@
             <MainCard title="Net Balance" :data="netBalance" color="bg-info"/>
         </div>
 
+        <div class="text-right m-5">
+            Focus mode
+            <input type="checkbox" class="ml-2 toggle toggle-success" v-model="isPro" @onChange="!isPro" />
+        </div>
+
+        <div v-if="isPro">
+            Pro mode
+        </div>
         <!-- Income and Expense Form -->
-        <BudgetForm @refetch="refetchData"/>
+        <BudgetForm @refetch="refetchData" v-else/>
 
         <!-- Transaction List -->
         <TransactionHistory :transactions="computedTransaction" @refetch="refetchData"/>
@@ -42,6 +50,7 @@ const transactions = ref([]);
 const totalExpense = ref(0);
 const totalIncome = ref(0);
 const router = useRouter()
+const isPro = ref(false)
 
 onBeforeMount(() => {
     fetchDashboard()
