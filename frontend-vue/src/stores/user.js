@@ -127,6 +127,18 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    const chartData = async() => {
+        const response = await axios.get(`${baseUrl}/last-year`, {
+            headers: {
+                Authorization: `${token.value}`
+            }
+        });
+        // console.log('response => ', response.status);
+        if(response.status == 200) {
+            return response.data;
+        }
+    }
+
     const logout = async() => {
         try {
             const response = await axios.post(`${baseUrl}/logout`, [], {
@@ -145,5 +157,5 @@ export const useUserStore = defineStore('user', () => {
         }
     }
   
-    return { token, user, register, login, setDatas, dashboard, addTransaction, deleteTransaction, logout }
+    return { token, user, register, login, setDatas, dashboard, addTransaction, deleteTransaction, logout, chartData }
 })

@@ -23,12 +23,12 @@
         </div>
 
         <div class="text-right m-5">
-            Focus mode
+            Show Chart
             <input type="checkbox" class="ml-2 toggle toggle-success" v-model="isPro" @onChange="!isPro" />
         </div>
 
         <div v-if="isPro">
-            Pro mode
+            <BudgetChart :chartData="computedChartData"/>
         </div>
         <!-- Income and Expense Form -->
         <BudgetForm @refetch="refetchData" v-else/>
@@ -40,6 +40,7 @@
 <script setup>
 import MainCard from "../components/MainCard.vue";
 import BudgetForm from "../components/BudgetForm.vue";
+import BudgetChart from "../components/BudgetChart.vue";
 import TransactionHistory from "../components/TransactionHistory.vue";
 import { useUserStore } from "../stores/user";
 import { computed, onBeforeMount, ref } from "vue";
@@ -52,6 +53,8 @@ const totalIncome = ref(0);
 const router = useRouter()
 const isPro = ref(false)
 
+const chartData = ref([])
+
 onBeforeMount(() => {
     fetchDashboard()
 })
@@ -61,7 +64,14 @@ const fetchDashboard = async () => {
     transactions.value = response.transactions
     totalExpense.value = response.expense
     totalIncome.value = response.income
+
+    let chartResponse = await userStore.chartData()
+    chartData.value = chartResponse
 };
+
+const computedChartData = computed(() => {
+    return chartData.value
+})
 
 const computedTransaction = computed(() => {
     return transactions.value
