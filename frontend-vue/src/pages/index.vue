@@ -65,9 +65,13 @@ const fetchDashboard = async () => {
     totalExpense.value = response.expense
     totalIncome.value = response.income
 
+    fetchChartData()
+};
+
+const fetchChartData = async() => {
     let chartResponse = await userStore.chartData()
     chartData.value = chartResponse
-};
+}
 
 const computedChartData = computed(() => {
     return chartData.value
@@ -83,6 +87,7 @@ const netBalance = computed(() => {
 
 const refetchData = () => {
     fetchDashboard()
+    fetchChartData()
 }
 
 const logoutUser = async() => {
