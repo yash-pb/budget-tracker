@@ -70,7 +70,8 @@ const fetchDashboard = async () => {
 
 const fetchChartData = async() => {
     let chartResponse = await userStore.chartData()
-    chartData.value = chartResponse
+    chartData.value.barChart = chartResponse.bar
+    chartData.value.pieChart = chartResponse.pie
 }
 
 const computedChartData = computed(() => {
