@@ -31,10 +31,10 @@
             <BudgetChart :chartData="computedChartData"/>
         </div>
         <!-- Income and Expense Form -->
-        <BudgetForm @refetch="refetchData" v-else/>
+        <BudgetForm @refetch="refetchData" :transactionData="computedTransaction" v-else/>
 
         <!-- Transaction List -->
-        <TransactionHistory :transactions="computedTransaction" @refetch="refetchData"/>
+        <TransactionHistory :transactions="computedTransactions" @refetch="refetchData" @edit="editTransaction"/>
     </div>
 </template>
 <script setup>
@@ -52,6 +52,8 @@ const totalExpense = ref(0);
 const totalIncome = ref(0);
 const router = useRouter()
 const isPro = ref(false)
+
+const transaction = ref(null)
 
 const chartData = ref([])
 
@@ -78,7 +80,7 @@ const computedChartData = computed(() => {
     return chartData.value
 })
 
-const computedTransaction = computed(() => {
+const computedTransactions = computed(() => {
     return transactions.value
 })
 
@@ -90,6 +92,17 @@ const refetchData = () => {
     fetchDashboard()
     fetchChartData()
 }
+const editTransaction = async (id) => {
+    let response = await userStore.transaction(id)
+    console.log('response => ', response);
+    if(response.status) {
+        transaction.value = response.transaction
+    }
+}
+
+const computedTransaction = computed(() => {
+    return transaction.value
+})
 
 const logoutUser = async() => {
     const response = await userStore.logout()

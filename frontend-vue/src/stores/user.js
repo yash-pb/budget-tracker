@@ -81,6 +81,26 @@ export const useUserStore = defineStore('user', () => {
         }
     }
 
+    const transaction = async(id) => {
+        try {
+            const response = await axios.get(`${baseUrl}/transaction/${id}`,{
+                headers: {
+                    Authorization: `${token.value}`
+                }
+            });
+            if(response.status == 200) {
+                return response.data;
+            }
+        } catch (error) {
+            let response = error.response
+            if(response.status == 401) {
+                router.push({
+                    name: 'login'
+                })
+            }
+        }
+    }
+
     const addTransaction = async(transaction) => {
         try {
             const response = await axios.post(`${baseUrl}/add-transaction`, transaction, {
@@ -157,5 +177,5 @@ export const useUserStore = defineStore('user', () => {
         }
     }
   
-    return { token, user, register, login, setDatas, dashboard, addTransaction, deleteTransaction, logout, chartData }
+    return { token, user, register, login, setDatas, dashboard, addTransaction, deleteTransaction, logout, chartData, transaction }
 })

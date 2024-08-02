@@ -48,19 +48,59 @@ router.get('/dashboard', verifyToken, async (req, res) => {
 router.post('/add-transaction', verifyToken, async (req, res) => {
     try {
         let currentUserId = getUserIdFromAuthToken(req.header('Authorization'))
-        const { description, amount, type } = req.body;
-        const transaction = new Transaction({
-            user_id: currentUserId,
-            description: description,
-            amount: amount,
-            type: type
-        });
-        await transaction.save();
-        res.status(200).json({ message: 'Entry added success' });
+        const { description, amount, type, _id } = req.body;
+        if(_id != undefined) {
+            const updatedTransaction = await Transaction.findByIdAndUpdate(_id,
+                {
+                    $set: {
+                        description: description,
+                        amount: amount,
+                        type: type
+                    }
+                },
+                { new: true, runValidators: true }
+            )
+
+            if (!updatedTransaction) {
+                return res.status(404).json({ message: 'Transaction not found' });
+            }
+    
+            return res.status(200).json(updatedTransaction);
+        } else {
+            const transaction = new Transaction({
+                user_id: currentUserId,
+                description: description,
+                amount: amount,
+                type: type
+            });
+            await transaction.save();
+        }
+        return res.status(200).json({ message: 'Entry saved success' });
     } catch (error) {
         console.log('error => ', error);
     }
 });
+
+router.get('/transaction/:transaction_id', async (req, res) => {
+    let currentUserId = getUserIdFromAuthToken(req.header('Authorization'))
+    const { transaction_id } = req.params;
+    try {
+        const transaction = await Transaction.findOne(
+            { user_id: currentUserId, _id: transaction_id },
+            { password: 0 } // Exclude the password field
+        );
+
+        if (!transaction) {
+            return res.status(404).json({ message: 'Transaction not found' });
+        }
+
+        res.status(200).json({ status: true, transaction: transaction });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 router.post('/delete-transaction', verifyToken, async (req, res) => {
     try {
