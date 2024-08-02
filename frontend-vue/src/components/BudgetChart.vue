@@ -1,12 +1,10 @@
 <template>
     <div class="lg:flex w-full lg:space-x-10 md:space-y-5 lg:space-y-0">
         <div class="card rounded-box grid h-80 md:h-96 flex-grow place-items-center">
-            <Bar id="my-chart-id" :options="chartOptions" :data="chartData.barChart" />
-            <!-- <span> Income/Expenses </span> -->
+            <Bar id="my-chart-id" :options="barChartOptions" :data="chartData.barChart" />
         </div>
         <div class="card rounded-box grid h-80 md:h-96 flex-grow place-items-center">
-            <Pie :data="chartData.pieChart" :options="chartOptions" />
-            <!-- <span> Categories Expenses </span> -->
+            <Pie :data="chartData.pieChart" :options="pieChartOptions" />
         </div>
     </div>
 </template>
@@ -17,8 +15,23 @@ import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, Li
 const props = defineProps(['chartData']);
 ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, LinearScale)
 
-const chartOptions = {
+const barChartOptions = {
     responsive: true,
-    // maintainAspectRatio: false
+    plugins: {
+        title: {
+            display: true,
+            text: 'Income/Expenses'
+        }
+    }
+}
+
+const pieChartOptions = {
+    responsive: true,
+    plugins: {
+        title: {
+            display: true,
+            text: 'Categories Expenses'
+        }
+    }
 }
 </script>
