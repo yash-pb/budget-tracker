@@ -182,8 +182,9 @@ const categoriseExpenses = async (currentUserId) => {
             {
                 $match: {
                     user_id: currentUserId,
+                    type: 'Expense'
                 }
-            }
+            },
         ]);
 
         const categorizedExpenses = {};
@@ -217,10 +218,8 @@ const categoriseExpenses = async (currentUserId) => {
                 }
             ]
         };
-        // console.log('response => ', response);
         return response;
     } catch (err) {
-        //   res.status(500).json({ message: err.message });
         return [];
     }
 }
